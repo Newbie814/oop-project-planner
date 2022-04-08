@@ -208,6 +208,11 @@ button.alt {
   color: var(--clr-primary-1);
 }
 
+button.alt:hover {
+  background: var(--clr-primary-1);
+  color: var(--clr-primary-9);
+}
+
 button:focus {
   outline: none;
 }
