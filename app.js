@@ -9,6 +9,7 @@ class DOMHelper {
     const element = document.getElementById(elementId);
     const destination = document.querySelector(newDestinationSelector);
     destination.append(element);
+    element.scrollIntoView({ behavior: 'smooth' });
   }
 }
 
@@ -37,8 +38,8 @@ class Component {
 }
 
 class ToolTip extends Component {
-  constructor(closeNotifierFunction, text) {
-    super();
+  constructor(closeNotifierFunction, text, hostElementId) {
+    super(hostElementId);
     this.closeNotifier = closeNotifierFunction;
     this.text = text;
     this.create();
@@ -53,7 +54,26 @@ class ToolTip extends Component {
   create() {
     const toolTipElement = document.createElement('div');
     toolTipElement.className = 'card';
-    toolTipElement.textContent = this.text;
+    const toolTipTemplate = document.getElementById('toolTip');
+    const toolTipBody = document.importNode(toolTipTemplate.content, true);
+    toolTipBody.querySelector('p').textContent = this.text;
+    toolTipElement.append(toolTipBody);
+    const hostElementPositionLeft = this.hostElement.offsetLeft;
+    const hostElementPositionTop = this.hostElement.offsetTop;
+    const hostElementHeight = this.hostElement.clientHeight;
+    const hostElementWidth = this.hostElement.clientWidth;
+    const parentElementScrolling = this.hostElement.parentElement.scrollTop;
+
+    const x = hostElementPositionLeft + 20;
+    const y =
+      hostElementPositionTop + hostElementHeight - parentElementScrolling - 10;
+
+    toolTipElement.style.position = 'absolute';
+    toolTipElement.style.left = x + 'px';
+    toolTipElement.style.top = y + 'px';
+    toolTipElement.style.width = hostElementWidth - 40 + 'px';
+
+    console.log(this.hostElement.getBoundingClientRect());
     toolTipElement.addEventListener('click', this.closeToolTip);
     this.element = toolTipElement;
   }
@@ -76,9 +96,13 @@ class ProjectItem {
     const projectElement = document.getElementById(this.id);
     const toolTipText = projectElement.dataset.extraInfo;
 
-    const toolTip = new ToolTip(() => {
-      this.hasActiveToolTip = false;
-    }, toolTipText);
+    const toolTip = new ToolTip(
+      () => {
+        this.hasActiveToolTip = false;
+      },
+      toolTipText,
+      this.id
+    );
     toolTip.show();
     this.hasActiveToolTip = true;
   }
@@ -153,6 +177,16 @@ class App {
     finishedProjectsList.setSwitchHandlerFunction(
       activeProjectsList.addProject.bind(activeProjectsList)
     );
+    this.startAnalytics();
+    // const someScript = document.createElement('script');
+    // someScript.textContent = 'alert("what up")';
+    // document.head.append(someScript);
+  }
+  static startAnalytics() {
+    const analyticsScript = document.createElement('script');
+    analyticsScript.src = 'analytics.js';
+    analyticsScript.defer = true;
+    document.head.append(analyticsScript);
   }
 }
 
