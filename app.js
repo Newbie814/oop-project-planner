@@ -177,10 +177,7 @@ class App {
     finishedProjectsList.setSwitchHandlerFunction(
       activeProjectsList.addProject.bind(activeProjectsList)
     );
-    this.startAnalytics();
-    // const someScript = document.createElement('script');
-    // someScript.textContent = 'alert("what up")';
-    // document.head.append(someScript);
+    setTimeout(this.startAnalytics, 3000);
   }
   static startAnalytics() {
     const analyticsScript = document.createElement('script');
