@@ -107,6 +107,13 @@ class ProjectItem {
     this.hasActiveToolTip = true;
   }
 
+  connectDragHandler() {
+    document.getElementById(this.id).addEventListener('dragstart', (event) => {
+      event.dataTransfer.setData('text/plain', this.id);
+      event.dataTransfer.effectAllowed = 'move';
+    });
+  }
+
   connectMoreInfoBtn() {
     const projectItemElement = document.getElementById(this.id);
     const moreInfoBtn = projectItemElement.querySelector(
@@ -149,6 +156,25 @@ class ProjectList {
       );
     }
     console.log(this.projects);
+    this.connectDropHandler();
+  }
+
+  connectDropHandler() {
+    const list = document.querySelector(`#${this.type}-projects ul`);
+    list.addEventListener('dragenter', (event) => {
+      event.preventDefault();
+      list.parentElement.classList.add('droppable');
+    });
+
+    list.addEventListener('dragover', (event) => {
+      event.preventDefault();
+    });
+
+    list.addEventListener('dragleave', (event) => {
+      if (event.relatedTarget.closest(`#${this.type}-projects ul`) !== list) {
+        list.parentElement.classList.remove('droppable');
+      }
+    });
   }
 
   setSwitchHandlerFunction(switchHandlerFuction) {

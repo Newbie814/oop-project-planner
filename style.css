@@ -233,6 +233,10 @@ button:active {
   width: ;
 }
 
+.droppable {
+  background: var(--clr-primary-10);
+}
+
 #active-projects {
   border: 1px solid hsl(205, 78%, 60%);
 }
