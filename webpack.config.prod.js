@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: './src/app.js',
   output: {
     filename: 'app.js',
@@ -14,4 +14,4 @@ module.exports = {
   //   },
   // },
 };
-devTool: 'cheap-module-eval-source-map';
+devTool: 'cheap-source-map';
